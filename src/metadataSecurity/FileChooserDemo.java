@@ -93,17 +93,6 @@ public class FileChooserDemo extends JPanel
         }
     }
 
-    /** Returns an ImageIcon, or null if the path was invalid. */
-    protected static ImageIcon createImageIcon(String path) {
-        java.net.URL imgURL = FileChooserDemo.class.getResource(path);
-        if (imgURL != null) {
-            return new ImageIcon(imgURL);
-        } else {
-            System.err.println("Couldn't find file: " + path);
-            return null;
-        }
-    }
-
     /**
      * Create the GUI and show it.  For thread safety,
      * this method should be invoked from the
