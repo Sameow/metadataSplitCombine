@@ -40,18 +40,18 @@ public class FileChooserDemo extends JPanel
         //then the default mode (FILES_ONLY) will be used.
         //
         //fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        //fc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+        fc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
 
         //Create the open button.  We use the image from the JLF
         //Graphics Repository (but we extracted it from the jar).
-        openButton = new JButton("Open a File...",
-                                 createImageIcon("images/Open16.gif"));
+        openButton = new JButton("Open a File...");
+                                // createImageIcon("images/Open16.gif"));
         openButton.addActionListener(this);
 
         //Create the save button.  We use the image from the JLF
         //Graphics Repository (but we extracted it from the jar).
-        saveButton = new JButton("Save a File...",
-                                 createImageIcon("images/Save16.gif"));
+        saveButton = new JButton("Save a File...");
+                                // createImageIcon("images/Save16.gif"));
         saveButton.addActionListener(this);
 
         //For layout purposes, put the buttons in a separate panel
@@ -111,12 +111,10 @@ public class FileChooserDemo extends JPanel
      */
     private static void createAndShowGUI() {
         //Create and set up the window.
-        JFrame frame = new JFrame("FileChooserDemo");
+        JFrame frame = new JFrame("File Split/Combine");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
         //Add content to the window.
         frame.add(new FileChooserDemo());
-
         //Display the window.
         frame.pack();
         frame.setVisible(true);
