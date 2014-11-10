@@ -5,19 +5,18 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 	
-public class SplitFileExample {
-	 		private static String FILE_NAME = "TextFile.txt";
+public class SplitFile {
 	 	    private static byte PART_SIZE = 5;
-	 	    public static void main(String[] args) {
-	 	        File inputFile = new File(FILE_NAME);
+	 	    
+	 	    public SplitFile(File file) {
 	 	        FileInputStream inputStream;
 	 	        String newFileName;
 	 	        FileOutputStream filePart;
-	 	        int fileSize = (int) inputFile.length();
+	 	        int fileSize = (int) file.length();
 	 	        int nChunks = 0, read = 0, readLength = PART_SIZE;
 	 	        byte[] byteChunkPart;
 	 	        try {
-	 	            inputStream = new FileInputStream(inputFile);
+	 	            inputStream = new FileInputStream(file);
 	 	            while (fileSize > 0) {
 	 	                if (fileSize <= 5) {
 	 	                    readLength = fileSize;
@@ -26,7 +25,7 @@ public class SplitFileExample {
 	 	                read = inputStream.read(byteChunkPart, 0, readLength);
 	 	                fileSize -= read;
 	 	                nChunks++;
-	 	                newFileName = FILE_NAME + ".part"
+	 	                newFileName = file.getName() + ".part"
 	 	                        + Integer.toString(nChunks - 1);
 	 	                filePart = new FileOutputStream(new File(newFileName));
 	 	                filePart.write(byteChunkPart);
@@ -40,4 +39,9 @@ public class SplitFileExample {
 	 	            exception.printStackTrace();
 	 	        }
 	 	    }
+	 	    
+	 	   public static void main(String[] args) {
+	 		  File inputFile = new File("TextFile.txt");
+	 		  new SplitFile(inputFile);
+	 	   }
 }

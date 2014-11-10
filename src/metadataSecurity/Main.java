@@ -3,23 +3,25 @@ package metadataSecurity;
 import java.io.*;
 import java.awt.*;
 import java.awt.event.*;
+
 import javax.swing.*;
-import javax.swing.SwingUtilities;
 import javax.swing.filechooser.*;
+
+import splitMergeFile.SplitFile;
 
 /*
  * FileChooserDemo.java uses these files:
  *   images/Open16.gif
  *   images/Save16.gif
  */
-public class FileChooserDemo extends JPanel
+public class Main extends JPanel
                              implements ActionListener {
     static private final String newline = "\n";
-    JButton openButton, saveButton;
+    JButton splitButton, combineButton;
     JTextArea log;
     JFileChooser fc;
 
-    public FileChooserDemo() {
+    public Main() {
         super(new BorderLayout());
 
         //Create the log first, because the action listeners
@@ -42,22 +44,18 @@ public class FileChooserDemo extends JPanel
         //fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         fc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
 
-        //Create the open button.  We use the image from the JLF
-        //Graphics Repository (but we extracted it from the jar).
-        openButton = new JButton("Open a File...");
-                                // createImageIcon("images/Open16.gif"));
-        openButton.addActionListener(this);
+        //Create the split button.
+        splitButton = new JButton("Split a File...");
+        splitButton.addActionListener(this);
 
-        //Create the save button.  We use the image from the JLF
-        //Graphics Repository (but we extracted it from the jar).
-        saveButton = new JButton("Save a File...");
-                                // createImageIcon("images/Save16.gif"));
-        saveButton.addActionListener(this);
+        //Create the combine button.
+        combineButton = new JButton("Combine a File...");
+        combineButton.addActionListener(this);
 
         //For layout purposes, put the buttons in a separate panel
         JPanel buttonPanel = new JPanel(); //use FlowLayout
-        buttonPanel.add(openButton);
-        buttonPanel.add(saveButton);
+        buttonPanel.add(splitButton);
+        buttonPanel.add(combineButton);
 
         //Add the buttons and the log to this panel.
         add(buttonPanel, BorderLayout.PAGE_START);
@@ -66,9 +64,9 @@ public class FileChooserDemo extends JPanel
 
     public void actionPerformed(ActionEvent e) {
 
-        //Handle open button action.
-        if (e.getSource() == openButton) {
-            int returnVal = fc.showOpenDialog(FileChooserDemo.this);
+        //Handle split button action.
+        if (e.getSource() == splitButton) {
+            int returnVal = fc.showOpenDialog(Main.this);
 
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 File file = fc.getSelectedFile();
@@ -79,13 +77,14 @@ public class FileChooserDemo extends JPanel
             }
             log.setCaretPosition(log.getDocument().getLength());
 
-        //Handle save button action.
-        } else if (e.getSource() == saveButton) {
-            int returnVal = fc.showSaveDialog(FileChooserDemo.this);
+        //Handle combine button action.
+        } else if (e.getSource() == combineButton) {
+            int returnVal = fc.showSaveDialog(Main.this);
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 File file = fc.getSelectedFile();
                 //This is where a real application would save the file.
-                log.append("Saving: " + file.getName() + "." + newline);
+                log.append("Splitting: " + file.getName() + "." + newline);
+                new SplitFile(file);
             } else {
                 log.append("Save command cancelled by user." + newline);
             }
@@ -103,7 +102,7 @@ public class FileChooserDemo extends JPanel
         JFrame frame = new JFrame("File Split/Combine");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         //Add content to the window.
-        frame.add(new FileChooserDemo());
+        frame.add(new Main());
         //Display the window.
         frame.pack();
         frame.setVisible(true);

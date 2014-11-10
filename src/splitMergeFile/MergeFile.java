@@ -5,7 +5,7 @@ import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MergeFileExample {
+public class MergeFile {
 	private static String FILE_NAME = "TextFile.txt";
 	public static void main(String[] args) {
 		File ofile = new File(FILE_NAME);
