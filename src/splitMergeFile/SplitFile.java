@@ -31,6 +31,7 @@ public class SplitFile {
 	 	                filePart.write(byteChunkPart);
 	 	                filePart.flush();
 	 	                filePart.close();
+	 	                //send file part
 	                 byteChunkPart = null;
 	 	                filePart = null;
 	 	            }

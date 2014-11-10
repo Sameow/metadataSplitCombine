@@ -71,9 +71,15 @@ public class Main extends JPanel
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 File file = fc.getSelectedFile();
                 //This is where a real application would open the file.
-                log.append("Opening: " + file.getName() + "." + newline);
+                log.append("Splitting: " + file.getName() + "." + newline);
+                try {
+					new sendToServer(file);
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
             } else {
-                log.append("Open command cancelled by user." + newline);
+                log.append("Split command cancelled by user." + newline);
             }
             log.setCaretPosition(log.getDocument().getLength());
 
