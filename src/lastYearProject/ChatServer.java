@@ -1,4 +1,4 @@
-package streamsAndThreads;
+package lastYearProject;
 
 import java.io.*;
 import java.util.*;
