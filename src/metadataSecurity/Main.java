@@ -3,20 +3,15 @@ package metadataSecurity;
 import java.io.*;
 import java.awt.*;
 import java.awt.event.*;
-
 import javax.swing.*;
-import javax.swing.filechooser.*;
 
-import splitMergeFile.SplitFile;
-
-/*
- * FileChooserDemo.java uses these files:
- *   images/Open16.gif
- *   images/Save16.gif
- */
 public class Main extends JPanel
                              implements ActionListener {
-    static private final String newline = "\n";
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	static private final String newline = "\n";
     JButton splitButton, combineButton;
     JTextArea log;
     JFileChooser fc;

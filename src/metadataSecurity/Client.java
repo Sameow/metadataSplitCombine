@@ -10,31 +10,14 @@ public class Client {
 	private boolean fileSplited;
 	private Socket socket;
 	
-	 public InetAddress getServer() {
-		return server;
-	}
-	public void setServer(InetAddress server) {
-		this.server = server;
-	}
-	public PrintWriter getOutput() {
-		return output;
-	}
-	public void setOutput(PrintWriter output) {
-		this.output = output;
-	}
-	public BufferedReader getInput() {
-		return input;
-	}
-	public void setInput(BufferedReader input) {
-		this.input = input;
-	}
 	public boolean isFileSplited() {
 		return fileSplited;
 	}
+
 	public void setFileSplited(boolean fileSplited) {
 		this.fileSplited = fileSplited;
 	}
-	
+
 	public Client() throws IOException {
 		 try {
 				server = InetAddress.getLocalHost();
@@ -60,7 +43,7 @@ public class Client {
         String serverResult;
         while ((serverResult = input.readLine()) != null) {
             if (serverResult.equals("File splited")) {
-            	fileSplited=true;   	
+            	setFileSplited(true);   	
                 break;	
             }
         }
