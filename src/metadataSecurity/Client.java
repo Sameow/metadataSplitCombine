@@ -7,11 +7,38 @@ public class Client {
 	private InetAddress server;  
 	private PrintWriter output;
 	private BufferedReader input;
+	private boolean fileSplited;
+	private Socket socket;
 	
-	 public Client() {
+	 public InetAddress getServer() {
+		return server;
+	}
+	public void setServer(InetAddress server) {
+		this.server = server;
+	}
+	public PrintWriter getOutput() {
+		return output;
+	}
+	public void setOutput(PrintWriter output) {
+		this.output = output;
+	}
+	public BufferedReader getInput() {
+		return input;
+	}
+	public void setInput(BufferedReader input) {
+		this.input = input;
+	}
+	public boolean isFileSplited() {
+		return fileSplited;
+	}
+	public void setFileSplited(boolean fileSplited) {
+		this.fileSplited = fileSplited;
+	}
+	
+	public Client() throws IOException {
 		 try {
 				server = InetAddress.getLocalHost();
-	            Socket socket = new Socket(server, 4444);
+	            socket = new Socket(server, 4444);
 	            output = new PrintWriter(socket.getOutputStream(), true);
 	            input = new BufferedReader(
 	                new InputStreamReader(socket.getInputStream()));
@@ -23,25 +50,40 @@ public class Client {
 	                server);
 	            System.exit(1);
 	        }
-	            BufferedReader userInput =
-	                new BufferedReader(new InputStreamReader(System.in));
-	            String fromServer;
-	            String fromUser;
-
-	            while ((fromServer = input.readLine()) != null) {
-	                System.out.println("Server: " + fromServer);
-	                if (fromServer.equals("Bye."))
-	                    break;
-	                
-	                fromUser = userInput.readLine();
-	                if (fromUser != null) {
-	                    System.out.println("Client: " + fromUser);
-	                    output.println(fromUser);
-	                }
-	            }
 	 }
+	
+	public void sendFile(File file) throws IOException{
+		FileInputStream userInput = new FileInputStream(file);
+        if (userInput != null) {
+            output.println(userInput);
+        }      
+        String serverResult;
+        while ((serverResult = input.readLine()) != null) {
+            if (serverResult.equals("File splited")) {
+            	fileSplited=true;   	
+                break;	
+            }
+        }
+	}
+	
+	public File getFile() throws IOException {
+		output.println("Combine file.");
+		String fileName = input.readLine();
+		File combinedFile = new File(fileName);
+		FileOutputStream fos = new FileOutputStream(combinedFile,true);
+		BufferedOutputStream bos = new BufferedOutputStream(fos);
+		byte[] mybytearray = new byte[1024];
+        InputStream is = socket.getInputStream();
+        int bytesRead = is.read(mybytearray, 0, mybytearray.length);
+        bos.write(mybytearray, 0, bytesRead);
+	    fos.flush();
+	    bos.close();
+	    fos.close();
+	    return combinedFile;   
+        }
+	
 	 public static void main(String[] args) throws IOException {
-	       new Client();
+//	       new Client(new File("TextFile.txt"));
 	    }
 	 
 }

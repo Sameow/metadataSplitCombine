@@ -67,12 +67,22 @@ public class Main extends JPanel
         //Handle split button action.
         if (e.getSource() == splitButton) {
             int returnVal = fc.showOpenDialog(Main.this);
-
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 File file = fc.getSelectedFile();
                 //This is where a real application would open the file.
                 log.append("Splitting: " + file.getName() + "." + newline);
-					//new sendToServer(file);
+                try {
+					Client client = new Client();
+					client.sendFile(file);
+					if (client.isFileSplited()){
+						 log.append("File successfully splited!"+ newline);
+					}
+					else {
+						 log.append("File splitting failed."+ newline);
+					}
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
             } else {
                 log.append("Split command cancelled by user." + newline);
             }
@@ -80,15 +90,14 @@ public class Main extends JPanel
 
         //Handle combine button action.
         } else if (e.getSource() == combineButton) {
-            int returnVal = fc.showSaveDialog(Main.this);
-            if (returnVal == JFileChooser.APPROVE_OPTION) {
-                File file = fc.getSelectedFile();
-                //This is where a real application would save the file.
-                log.append("Splitting: " + file.getName() + "." + newline);
-                new SplitFile(file);
-            } else {
-                log.append("Save command cancelled by user." + newline);
-            }
+        	try {
+				Client client = new Client();
+				client.getFile();
+	            log.append("File combined." + newline);
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+            
             log.setCaretPosition(log.getDocument().getLength());
         }
     }
