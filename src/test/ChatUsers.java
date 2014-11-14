@@ -1,4 +1,4 @@
-package lastYearProject;
+package test;
 
 import java.io.*;
 import java.net.*;

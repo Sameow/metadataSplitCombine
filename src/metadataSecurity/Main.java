@@ -64,7 +64,6 @@ public class Main extends JPanel
             int returnVal = fc.showOpenDialog(Main.this);
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 File file = fc.getSelectedFile();
-                //This is where a real application would open the file.
                 log.append("Splitting: " + file.getName() + "." + newline);
                 try {
 					Client client = new Client();

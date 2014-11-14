@@ -36,6 +36,9 @@ public class Client {
 	 }
 	
 	public void sendFile(File file) throws IOException{
+		output.println("Split file.");
+		output.println(file.getName());
+		output.println(file.length());
 		FileInputStream userInput = new FileInputStream(file);
         if (userInput != null) {
             output.println(userInput);
@@ -46,6 +49,7 @@ public class Client {
             	setFileSplited(true);   	
                 break;	
             }
+            System.out.println(serverResult);
         }
 	}
 	
