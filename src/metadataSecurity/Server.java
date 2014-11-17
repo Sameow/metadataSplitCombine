@@ -62,22 +62,11 @@ public class Server {
 	
 	private void sendSharesToOthers() {
 		otherServerIP = getOtherServerIP();
-		Socket socket;
-		PrintWriter output;
-		BufferedReader input;
-		 try {
-			 	socket = new Socket(server, 4444);
-			 	output = new PrintWriter(socket.getOutputStream(), true);
-			 	input = new BufferedReader(
-	                new InputStreamReader(socket.getInputStream()));
-	        } catch (UnknownHostException e) {
-	            System.err.println("Don't know about host " + server);
-	            System.exit(1);
-	        } catch (IOException e) {
-	            System.err.println("Couldn't get I/O for the connection to " +
-	                server);
-	            System.exit(1);
-	        }
+			 for (int i=0; i<otherServerIP.size(); i++) {
+			 ServerThread serverthread = new ServerThread(new Socket(otherServerIP.get(i), 4444));
+			 serverthread.start();
+			 }
+	        
 		output.println("Sending shares.");
 //		output.println(shares n relevant info);
 	}
@@ -90,9 +79,7 @@ public class Server {
 				break;
 			}
 		}
-	
-		
-		return otherServerIP;	
+		return serverIPs;	
 	}
 	private void combineFile(){
 		
