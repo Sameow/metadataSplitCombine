@@ -2,13 +2,14 @@ package metadataSecurity;
 
 import java.io.*;
 import java.net.*;
+import java.util.ArrayList;
 
 public class Client {
 	private InetAddress server;  
 	private PrintWriter output;
 	private BufferedReader input;
 	private boolean fileSplited;
-	private Socket socket;
+	private ClientThread clientThread;
 	
 	public boolean isFileSplited() {
 		return fileSplited;
@@ -21,10 +22,22 @@ public class Client {
 	public Client() throws IOException {
 		 try {
 				server = InetAddress.getLocalHost();
-	            socket = new Socket(server, 4444);
-	            output = new PrintWriter(socket.getOutputStream(), true);
-	            input = new BufferedReader(
-	                new InputStreamReader(socket.getInputStream()));
+				//get all server ip n put in arrayList
+				ArrayList<InetAddress> serverIP = new ArrayList<InetAddress>();
+				ArrayList<ClientThread> ClientThreads = new ArrayList<ClientThread>();
+				for (int i=0; i<serverIP.size(); i++){
+					ClientThread lookForActiveServers = new ClientThread(new Socket(serverIP.get(i), 4444));
+					lookForActiveServers.start();
+					ClientThreads.add(lookForActiveServers);
+				}
+				for (int i=0; i<ClientThreads.size(); i++){
+					if(ClientThreads.get(i).isThisOneConnectedLiao()){
+						this.clientThread=ClientThreads.get(i);
+					}
+					else {
+						ClientThreads.get(i).getSocket().close();
+					}
+				}
 	        } catch (UnknownHostException e) {
 	            System.err.println("Don't know about host " + server);
 	            System.exit(1);
@@ -34,7 +47,7 @@ public class Client {
 	            System.exit(1);
 	        }
 	 }
-	
+
 	public void sendFile(File file) throws IOException{
 		output.println("Split file.");
 		output.println(file.getName());
@@ -60,7 +73,7 @@ public class Client {
 		FileOutputStream fos = new FileOutputStream(combinedFile,true);
 		BufferedOutputStream bos = new BufferedOutputStream(fos);
 		byte[] mybytearray = new byte[1024];
-        InputStream is = socket.getInputStream();
+        InputStream is = this.clientThread.getSocket().getInputStream();
         int bytesRead = is.read(mybytearray, 0, mybytearray.length);
         bos.write(mybytearray, 0, bytesRead);
 	    fos.flush();

@@ -14,17 +14,20 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketImpl;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 
 public class Server {
+	private ArrayList<InetAddress> otherServerIP;
+	
 	public Server(){
-		int portNumber = 4444;
 		try ( 
-	            ServerSocket serverSocket = new ServerSocket(portNumber);
+	            ServerSocket serverSocket = new ServerSocket(4444);
 	            Socket clientSocket = serverSocket.accept();
 	            PrintWriter output = new PrintWriter(clientSocket.getOutputStream(), true);
 	            BufferedReader input = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 	        ) {
 	            String inputLine, outputLine;
+	            output.println("Connected");
 	            while ((inputLine = input.readLine()) != null) {
 	            	if (inputLine.equals("Combine file.")){
 	            		combineFile();
@@ -37,7 +40,7 @@ public class Server {
 	            }
 	        } catch (IOException e) {
 	            System.out.println("Exception caught when trying to listen on port "
-	                + portNumber + " or listening for a connection");
+	                + 4444 + " or listening for a connection");
 	            System.out.println(e.getMessage());
 	        }
 	}
@@ -58,6 +61,7 @@ public class Server {
 	}
 	
 	private void sendSharesToOthers() {
+		otherServerIP = getOtherServerIP();
 		Socket socket;
 		PrintWriter output;
 		BufferedReader input;
@@ -76,7 +80,19 @@ public class Server {
 	        }
 		output.println("Sending shares.");
 //		output.println(shares n relevant info);
+	}
+	private ArrayList<InetAddress> getOtherServerIP() throws UnknownHostException {
+		//get all the server IP
+		ArrayList<InetAddress> serverIPs =new ArrayList<InetAddress>();
+		for (int i=0; i<serverIPs.size(); i++){
+			if (serverIPs.get(i).equals(InetAddress.getLocalHost())){
+				serverIPs.remove(i);
+				break;
+			}
+		}
+	
 		
+		return otherServerIP;	
 	}
 	private void combineFile(){
 		
