@@ -1,16 +1,27 @@
 package metadataSecurity;
 
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 
 public class ServerThread extends Thread{
-	PrintWriter output;
-	BufferedReader input;
-	public ServerThread(Socket socket) {
+	private PrintWriter output;
+	private BufferedReader input;
+	private Socket socket;
+	private String command;
+	private ArrayList<InetAddress> otherServerIP;
+	
+	public ServerThread(Socket socket, String command) {
+		this.socket=socket;
+		this.command=command;
 		try {
 			output = new PrintWriter(socket.getOutputStream(), true);
 			input = new BufferedReader(
@@ -18,12 +29,77 @@ public class ServerThread extends Thread{
 		} 
 	 	catch (UnknownHostException e) {
             System.err.println("Don't know about host " + socket.getInetAddress());
-            System.exit(1);
         } catch (IOException e) {
             System.err.println("Couldn't get I/O for the connection to " +
-                server);
-            System.exit(1);
-        }
+                socket.getInetAddress());
+        }  
+		
 	}
+	public void run(){
+		output.println("Connected");
+		String inputLine;
+         try {
+			while ((inputLine = input.readLine()) != null) {
+			 	if (inputLine.equals("Combine file.")){
+			 		combineFile();
+			 	}
+			 	if (inputLine.equals("Split file.")){ 
+			 		String fileName = input.readLine();
+			 		int fileSize = Integer.parseInt(input.readLine());
+			 		splitFile(fileName, fileSize, socket);
+			 	}	
+			 	
+			 	}
+		} catch (NumberFormatException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	private void splitFile(String fileName, int fileSize, Socket clientSocket) throws IOException{
+		File receivedFile = new File(fileName);
+		FileOutputStream fos = new FileOutputStream(receivedFile,true);
+		BufferedOutputStream bos = new BufferedOutputStream(fos);
+		byte[] mybytearray = new byte[fileSize];
+        int bytesRead = clientSocket.getInputStream().read(mybytearray, 0, mybytearray.length);
+        bos.write(mybytearray, 0, bytesRead);
+	    fos.flush();
+	    bos.close();
+	    fos.close();
+	  
+	   //Shamir shamir = new fileSplit(receivedFile);
+	   //sendSharesToOthers(shamir);  
+	}
+	
+	private void combineFile(){
+			
+		}
+	
+	private void sendSharesToOthers(Shamir shamir) throws IOException {
+		try {
+			otherServerIP = getOtherServerIP();
+		} catch (UnknownHostException e) {
+			System.out.println("Cannot get other server's IP.");
+			e.printStackTrace();
+		}
+			 for (int i=0; i<otherServerIP.size(); i++) {
+			 SendingThread serverthread = new SendingThread(new Socket(otherServerIP.get(i), 4444), shamir);
+			 serverthread.start();
+			 }
 
-}
+	}
+	private ArrayList<InetAddress> getOtherServerIP() throws UnknownHostException {
+		//get all the server IP
+		ArrayList<InetAddress> serverIPs =new ArrayList<InetAddress>();
+		for (int i=0; i<serverIPs.size(); i++){
+			if (serverIPs.get(i).equals(InetAddress.getLocalHost())){
+				serverIPs.remove(i);
+				break;
+			}
+		}
+		return serverIPs;	
+	}
+		
+	}
