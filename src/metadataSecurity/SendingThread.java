@@ -28,14 +28,17 @@ public class SendingThread extends Thread {
                 socket.getInetAddress());
         }
 		
-		
 	}
 	
 	public void run(){
     		output.println("Sending shares.");
-    	//	output.println(shares n relevant info);
-    		
-    		
-
+			//	output.println(shares n relevant info);
+    		String inputLine;
+    		while ((inputLine = input.readLine()) != null) {
+			 	if (inputLine.equals("Acknowledged.")){
+			 		break;
+			 	}
+			 	
+			 	}
 	}
 }

@@ -46,6 +46,8 @@ public class Client {
 	                server);
 	            System.exit(1);
 	        }
+			this.output = new PrintWriter(this.clientThread.getSocket().getOutputStream(), true);
+			this.input = new BufferedReader(new InputStreamReader(this.clientThread.getSocket().getInputStream()));
 	 }
 
 	public void sendFile(File file) throws IOException{
@@ -58,7 +60,7 @@ public class Client {
         }      
         String serverResult;
         while ((serverResult = input.readLine()) != null) {
-            if (serverResult.equals("File splited")) {
+            if (serverResult.equals("File splitting done.")) {
             	setFileSplited(true);   	
                 break;	
             }

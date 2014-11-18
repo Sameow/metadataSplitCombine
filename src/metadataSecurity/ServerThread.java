@@ -16,12 +16,10 @@ public class ServerThread extends Thread{
 	private PrintWriter output;
 	private BufferedReader input;
 	private Socket socket;
-	private String command;
 	private ArrayList<InetAddress> otherServerIP;
 	
-	public ServerThread(Socket socket, String command) {
+	public ServerThread(Socket socket) {
 		this.socket=socket;
-		this.command=command;
 		try {
 			output = new PrintWriter(socket.getOutputStream(), true);
 			input = new BufferedReader(
@@ -70,7 +68,8 @@ public class ServerThread extends Thread{
 	    fos.close();
 	  
 	   //Shamir shamir = new fileSplit(receivedFile);
-	   //sendSharesToOthers(shamir);  
+	   //sendSharesToOthers(shamir);
+	    output.println("File splitting done.");
 	}
 	
 	private void combineFile(){
@@ -84,10 +83,10 @@ public class ServerThread extends Thread{
 			System.out.println("Cannot get other server's IP.");
 			e.printStackTrace();
 		}
-			 for (int i=0; i<otherServerIP.size(); i++) {
-			 SendingThread serverthread = new SendingThread(new Socket(otherServerIP.get(i), 4444), shamir);
-			 serverthread.start();
-			 }
+		 for (int i=0; i<otherServerIP.size(); i++) {
+		 SendingThread serverthread = new SendingThread(new Socket(otherServerIP.get(i), 4444), shamir);
+		 serverthread.start();
+		 }
 
 	}
 	private ArrayList<InetAddress> getOtherServerIP() throws UnknownHostException {

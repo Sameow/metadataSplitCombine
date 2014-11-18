@@ -42,7 +42,6 @@ public class ClientThread extends Thread{
 	            while ((inputLine = input.readLine()) != null) {
 	            	if (inputLine.equals("Connected")){
 	            		setThisOneConnectedLiao(true);
-	            		 break;
 	            	}
 	                
 	            }
