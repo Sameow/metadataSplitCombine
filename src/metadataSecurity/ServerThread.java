@@ -46,6 +46,10 @@ public class ServerThread extends Thread{
 			 		int fileSize = Integer.parseInt(input.readLine());
 			 		splitFile(fileName, fileSize, socket);
 			 	}	
+			 	if (inputLine.equals("Sending shares.")){ 
+			 		//Shamir secretShare = input.readLine();
+			 		//Store somewhere
+			 	}
 			 	
 			 	}
 		} catch (NumberFormatException e) {
